@@ -1,7 +1,8 @@
 table{
-    border-collapse: collapse;
+    margin-top: 2rem;
 
 }
-tr{
-    border: 2px solid black;
+
+.hide{
+    display: none;
 }
