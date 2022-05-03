@@ -25,22 +25,58 @@ $(document).ready(function() {
     $(".table-dark").append(headers);
 
 
-    $("#addBtn").click(function (){
+    $("#addBtn").click(function () {
         $("#addNoteForm").toggle();
     });
 
-    function checkIfInputEmpty(){
+    function checkIfInputEmpty() {
         return $("#Text1").val();
     }
 
-    function checkIfConfirmationBtnClicked(){
-      return $("#exampleCheck1").is(':checked');
+    function checkIfConfirmationBtnClicked() {
+        return $("#exampleCheck1").is(':checked');
     }
+
+    function addNotesFromJson() {
+        $.get("https://jsonplaceholder.typicode.com/users", function (data) {
+            var arr = data;
+            $.each(arr,function (index){
+                addNoteFromJson(index +1,arr[index].company.catchPhrase);
+                addListener(index + 1);
+            })
+        })
+    }
+
+
+    function addListener(index){
+        $("[delete-id=" + index + "]").click(function (){
+            $(this).closest('tr').remove();
+        })
+    }
+
+
+
+    function addNoteFromJson(id,text){
+        var row = $("<tr></tr>");
+        var idCell = $("<td>" + id + "</td>");
+        var textCell = $("<td>" + text + "</td>");
+        var updateBtn = $("<button type=\"button\" class=\"btn btn-warning\">Update</button>");
+        var deleteBtn = $("<button type=\"button\" class=\"btn btn-danger\">Delete</button>");
+        updateBtn.attr('update-id',id);
+        deleteBtn.attr('delete-id',id);
+        var tdBtn1 = $("<td></td>")
+        var tdBtn2 = $("<td></td>")
+        tdBtn1.append(updateBtn);
+        tdBtn2.append(deleteBtn);
+        $("#tbody").append(row);
+        $("tr:last").append(idCell,textCell,tdBtn1,tdBtn2);
+    }
+
+    addNotesFromJson();
 
     var addNote = function (){
         var row = $("<tr><th scope='row'></th></tr>");
-        var cellValue = $("<td>test</td>");
-        console.log(checkIfConfirmationBtnClicked());
+        var id = $("<td>test</td>");
         if(!checkIfInputEmpty()){
             alert('insert some text!')
             return;
