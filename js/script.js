@@ -1,3 +1,20 @@
+const table = $("<table class='table'></table>");
+const thead = $("<thead class='table-dark''></thead>")
+const headers = $("<tr><th>ID</th><th>TEXT</th><th>UPDATE</th><th>DELETE</th></tr>");
+const tbody = $("<tbody id='tbody'></tbody>");
+const addButton = $("<button type=\"button\" class=\"btn btn-primary\" id='addBtn'>Add note</button>");
+const addNoteForm = $("<form id='addNoteForm' class='hide'>\n" +
+    "  <div class=\"form-group\">\n" +
+    "    <label for=\"Text\">Note text</label>\n" +
+    "    <input type=\"text\" class=\"form-control\" id=\"Text1\">\n" +
+    "  </div>\n" +
+    "  <div class=\"form-check\">\n" +
+    "    <input type=\"checkbox\" class=\"form-check-input\" id=\"exampleCheck1\">\n" +
+    "    <label class=\"form-check-label\" for=\"exampleCheck1\">Confirm adding note</label>\n" +
+    "  </div>\n" +
+    "  <button type=\"button\" class=\"btn btn-primary\" id='addNoteFormBtn'>Submit</button>\n" +
+    "</form>");
+
 function checkIfInputEmpty() {
     return $("#Text1").val();
 }
@@ -22,6 +39,11 @@ async function addNotesFromJson() {
         })
 }
 
+async function getInitialNrOfNotes(){
+    return parseInt($('table tr:last td:first').text());
+}
+
+
 function addListener(index){
     $("[delete-id=" + index + "]").click(function (){
         $(this).closest('tr').remove();
@@ -44,8 +66,23 @@ function addNoteFromJson(id,text){
     $("tr:last").append(idCell,textCell,tdBtn1,tdBtn2);
 }
 
-     function addNote(){
-    const row = $("<tr><th scope='row'></th></tr>");
+async function addNote(){
+    let id = await getInitialNrOfNotes() + 1;
+    const row = $("<tr></tr>");
+    const idCell = $("<td id=row"+id + ">" + id + "</td>");
+    const textCell = $("<td>" + $("#Text1").val() + "</td>");
+    const updateBtn = $("<button type=\"button\" class=\"btn btn-warning\">Update</button>");
+    const deleteBtn = $("<button type=\"button\" class=\"btn btn-danger\">Delete</button>");
+    updateBtn.attr('update-id',id+1);
+    deleteBtn.attr('delete-id',id+1);
+    const tdBtn1 = $("<td></td>")
+    const tdBtn2 = $("<td></td>")
+    tdBtn1.append(updateBtn);
+    tdBtn2.append(deleteBtn);
+    $("#tbody").append(row);
+    $("tr:last").append(idCell,textCell,tdBtn1,tdBtn2);
+
+
     if(!checkIfInputEmpty()){
         alert('insert some text!')
         return;
@@ -61,24 +98,6 @@ function addNoteFromJson(id,text){
 
 $(document).ready(function() {
 
-    const table = $("<table class='table'></table>");
-    const thead = $("<thead class='table-dark''></thead>")
-    const headers = $("<tr><th>ID</th><th>TEXT</th><th>UPDATE</th><th>DELETE</th></tr>");
-    const tbody = $("<tbody id='tbody'></tbody>");
-    const addButton = $("<button type=\"button\" class=\"btn btn-primary\" id='addBtn'>Add note</button>");
-    const addNoteForm = $("<form id='addNoteForm' class='hide'>\n" +
-        "  <div class=\"form-group\">\n" +
-        "    <label for=\"Text\">Note text</label>\n" +
-        "    <input type=\"text\" class=\"form-control\" id=\"Text1\">\n" +
-        "  </div>\n" +
-        "  <div class=\"form-check\">\n" +
-        "    <input type=\"checkbox\" class=\"form-check-input\" id=\"exampleCheck1\">\n" +
-        "    <label class=\"form-check-label\" for=\"exampleCheck1\">Confirm adding note</label>\n" +
-        "  </div>\n" +
-        "  <button type=\"button\" class=\"btn btn-primary\" id='addNoteFormBtn'>Submit</button>\n" +
-        "</form>");
-
-
     $("#wrapper").append(addButton,addNoteForm,table);
     $(".table").append(thead,tbody);
     $(".table-dark").append(headers);
@@ -88,13 +107,9 @@ $(document).ready(function() {
         $("#addNoteForm").toggle();
     });
 
-
-
     $("#addNoteFormBtn").click(()=>{addNote()});
 
-    addNotesFromJson();
-
-
+    addNotesFromJson()();
 
 });
 
