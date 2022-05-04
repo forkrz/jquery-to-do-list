@@ -6,14 +6,20 @@ function checkIfConfirmationBtnClicked() {
     return $("#exampleCheck1").is(':checked');
 }
 
-function addNotesFromJson() {
-    $.get("https://jsonplaceholder.typicode.com/users", function (data) {
-        const arr = data;
-        $.each(arr,function (index){
-            addNoteFromJson(index +1,arr[index].company.catchPhrase);
+async function getInitialNotesData(){
+
+    const res = await fetch('https://jsonplaceholder.typicode.com/users');
+    return await res.json();
+}
+
+
+async function addNotesFromJson() {
+    let x = await getInitialNotesData();
+
+        $.each(x,function (index){
+            addNoteFromJson(index +1,x[index].company.catchPhrase);
             addListener(index + 1);
         })
-    })
 }
 
 function addListener(index){
