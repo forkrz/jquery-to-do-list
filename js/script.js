@@ -1,10 +1,10 @@
 $(document).ready(function() {
-    var table = $("<table class='table'></table>");
-    var thead = $("<thead class='table-dark''></thead>")
-    var headers = $("<tr><th>ID</th><th>TEXT</th><th>UPDATE</th><th>DELETE</th></tr>");
-    var tbody = $("<tbody id='tbody'></tbody>");
-    var addButton = $("<button type=\"button\" class=\"btn btn-primary\" id='addBtn'>Add note</button>");
-    var addNoteForm = $("<form id='addNoteForm' class='hide'>\n" +
+    const table = $("<table class='table'></table>");
+    const thead = $("<thead class='table-dark''></thead>")
+    const headers = $("<tr><th>ID</th><th>TEXT</th><th>UPDATE</th><th>DELETE</th></tr>");
+    const tbody = $("<tbody id='tbody'></tbody>");
+    const addButton = $("<button type=\"button\" class=\"btn btn-primary\" id='addBtn'>Add note</button>");
+    const addNoteForm = $("<form id='addNoteForm' class='hide'>\n" +
         "  <div class=\"form-group\">\n" +
         "    <label for=\"Text\">Note text</label>\n" +
         "    <input type=\"text\" class=\"form-control\" id=\"Text1\">\n" +
@@ -47,18 +47,15 @@ $(document).ready(function() {
         })
     }
 
-
     function addListener(index){
         $("[delete-id=" + index + "]").click(function (){
             $(this).closest('tr').remove();
         })
     }
 
-
-
     function addNoteFromJson(id,text){
         var row = $("<tr></tr>");
-        var idCell = $("<td>" + id + "</td>");
+        var idCell = $("<td id=row"+id + ">" + id + "</td>");
         var textCell = $("<td>" + text + "</td>");
         var updateBtn = $("<button type=\"button\" class=\"btn btn-warning\">Update</button>");
         var deleteBtn = $("<button type=\"button\" class=\"btn btn-danger\">Delete</button>");
@@ -72,11 +69,10 @@ $(document).ready(function() {
         $("tr:last").append(idCell,textCell,tdBtn1,tdBtn2);
     }
 
-    addNotesFromJson();
+        addNotesFromJson();
 
     var addNote = function (){
         var row = $("<tr><th scope='row'></th></tr>");
-        var id = $("<td>test</td>");
         if(!checkIfInputEmpty()){
             alert('insert some text!')
             return;
@@ -88,7 +84,7 @@ $(document).ready(function() {
 
 
         $("#tbody").append(row);
-        $("th:last").append(cellValue);
+        $("th:last").append(id);
     }
 
     $("#addNoteFormBtn").click(addNote);
@@ -96,3 +92,4 @@ $(document).ready(function() {
 
 
 });
+
